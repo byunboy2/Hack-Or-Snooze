@@ -1,5 +1,9 @@
 "use strict";
 
+const $titleInput = $("#newStory-form-title");
+const $authorInput = $("#newStory-form-author");
+const $urlInput = $("#newStory-form-url");
+
 // This is the global list of the stories, an instance of StoryList
 let storyList;
 
@@ -49,4 +53,29 @@ function putStoriesOnPage() {
   }
 
   $allStoriesList.show();
+}
+
+/** add event listener, submitNewStory to the add story form  */
+$("#newStory-form").on("submit", handleSubmitNewStory);
+
+/** handleSubmitNewStory: submit a new story
+ * - calls on the addStory method
+ */
+async function handleSubmitNewStory(evt) {
+  evt.preventDefault();
+  // pull the data from the form fields
+  const title = $titleInput.val();
+  const author = $authorInput.val();
+  const url = $urlInput.val();
+  // create a new story
+  // addStory(user, newStory)
+  const newStory = await storyList.addStory(currentUser, {
+    title,
+    author,
+    url,
+  });
+  // create story markup
+  const storyMarkup = generateStoryMarkup(newStory);
+  // display the story
+  $(".stories-list").prepend(storyMarkup);
 }

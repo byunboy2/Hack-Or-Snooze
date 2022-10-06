@@ -36,3 +36,10 @@ function updateNavOnLogin() {
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
+
+$("#nav-submit").on("click", revealStoryForm);
+
+/** revealStoryForm: unhides the new story form */
+function revealStoryForm() {
+  $("#newStory-form").css("display", "block"); // update .show()
+}
