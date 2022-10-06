@@ -25,7 +25,7 @@ class Story {
 
   getHostName() {
     // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    return this.url.hostname;
   }
 }
 
@@ -43,6 +43,7 @@ class StoryList {
    *
    *  - calls the API
    *  - builds an array of Story instances
+   *  - Create initial story list
    *  - makes a single StoryList instance out of that
    *  - returns the StoryList instance.
    */
@@ -73,9 +74,23 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory( /* user, newStory */) {
+  async addStory(user, newStory) {
+
+    const postStory = await axios({
+      url: `${BASE_URL}/stories`,
+      method: "POST",
+      data: {
+        token: user.loginToken,
+        story: { title: newStory.title, author: newStory.author, url: newStory.url }
+      },
+    });
     // UNIMPLEMENTED: complete this function!
+    const storyInstance = new Story(postStory.data.story);
+    this.stories.push(storyInstance);
+    return storyInstance;
   }
+
+
 }
 
 
@@ -90,13 +105,13 @@ class User {
    */
 
   constructor({
-                username,
-                name,
-                createdAt,
-                favorites = [],
-                ownStories = []
-              },
-              token) {
+    username,
+    name,
+    createdAt,
+    favorites = [],
+    ownStories = []
+  },
+    token) {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
