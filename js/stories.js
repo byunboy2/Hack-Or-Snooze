@@ -14,7 +14,7 @@ async function getAndShowStoriesOnStart() {
   storyList = await StoryList.getStories();
   $storiesLoadingMsg.remove();
 
-  putStoriesOnPage();
+  await putStoriesOnPage();
 }
 
 /**
@@ -24,14 +24,33 @@ async function getAndShowStoriesOnStart() {
  * Returns the markup for the story.
  */
 
-function generateStoryMarkup(story) {
+async function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
-  const hostName = story.getHostName();
-  return $(`
+  // TODO make favorited story, star show up
 
+  const username = localStorage.getItem("username");
+
+  let favoritesIds;
+
+  if (username) {
+    // make api call, get the current user
+    favoritesIds = (await getUserFavorites(username)).map(
+      ({ storyId }) => storyId
+    );
+  }
+
+  const isFavorited = favoritesIds.includes(story.storyId);
+  // favorite star type
+  const favoriteStar = isFavorited
+    ? '<i class="bi bi-star-fill"></i>'
+    : '<i class="bi bi-star"></i>';
+
+  const hostName = story.getHostName();
+
+  return $(`
       <li id="${story.storyId}">
-      <i class="bi bi-star"></i>
+      ${favoriteStar}
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -44,14 +63,14 @@ function generateStoryMarkup(story) {
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
-function putStoriesOnPage() {
+async function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
 
   $allStoriesList.empty();
 
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
-    const $story = generateStoryMarkup(story);
+    const $story = await generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
 
@@ -78,7 +97,23 @@ async function handleSubmitNewStory(evt) {
     url,
   });
   // create story markup
-  const storyMarkup = generateStoryMarkup(newStory);
+  const storyMarkup = await generateStoryMarkup(newStory);
   // display the story
   $(".stories-list").prepend(storyMarkup);
+}
+
+// get the current user's favorites using an id
+async function getUserFavorites(username) {
+  const token = localStorage.getItem("token");
+  console.log({ token });
+  const {
+    data: {
+      user: { favorites },
+    },
+  } = await axios({
+    url: `https://hack-or-snooze-v3.herokuapp.com/users/${username}`,
+    method: "GET",
+    token,
+  });
+  return favorites;
 }

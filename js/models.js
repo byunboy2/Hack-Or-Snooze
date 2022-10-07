@@ -74,7 +74,7 @@ class StoryList {
    */
 
   async addStory(user, newStory) {
-    const postStory = await axios({
+    const response = await axios({
       url: `${BASE_URL}/stories`,
       method: "POST",
       data: {
@@ -87,7 +87,7 @@ class StoryList {
       },
     });
     // UNIMPLEMENTED: complete this function!
-    const storyInstance = new Story(postStory.data.story);
+    const storyInstance = new Story(response.data.story);
     this.stories.push(storyInstance);
     return storyInstance;
   }
@@ -204,28 +204,15 @@ class User {
     }
   }
 
-  /** addFavorite */
-  async addFavorite(storyId) {
+  /** add or remove Favorite */
+  async favoritingOrUnfavoriting(storyId, isUnfavoriting) {
     // make api call to favorite a story
     await axios({
       url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
-      method: "POST",
-      data: {
-        token: currentUser.loginToken,
-      },
-    });
-  }
-
-  /** unfavorite */
-  async unfavorite(storyId) {
-    // make api call to un-favorite a story
-    await axios({
-      url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
-      method: "DELETE",
+      method: isUnfavoriting ? "DELETE" : "POST",
       data: {
         token: currentUser.loginToken,
       },
     });
   }
 }
-

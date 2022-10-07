@@ -3,6 +3,10 @@
 // global to hold the User instance of the currently-logged-in user
 let currentUser;
 
+const $pipes = $(".pipe");
+const $navSubmit = $("#nav-submit");
+const $navUserFavorites = $("#nav-user-favorites");
+
 /******************************************************************************
  * User login/signup/login
  */
@@ -12,6 +16,9 @@ let currentUser;
 async function login(evt) {
   console.debug("login", evt);
   evt.preventDefault();
+
+  // show the logged in buttons
+  showLoggedInButtons();
 
   // grab the username and password
   const username = $("#login-username").val();
@@ -35,6 +42,9 @@ async function signup(evt) {
   console.debug("signup", evt);
   evt.preventDefault();
 
+  // show the logged in buttons
+  showLoggedInButtons();
+
   const name = $("#signup-name").val();
   const username = $("#signup-username").val();
   const password = $("#signup-password").val();
@@ -57,6 +67,9 @@ $signupForm.on("submit", signup);
  */
 
 function logout(evt) {
+  // hide the pipes, nav submit button, user favorites button
+  unshowLoggedInButtons();
+
   console.debug("logout", evt);
   localStorage.clear();
   location.reload();
@@ -115,18 +128,40 @@ function updateUIOnUserLogin() {
   updateNavOnLogin();
 }
 
-function favoriteStory(e){
-$(e.target).removeClass("bi bi-star");
-$(e.target).addClass("bi bi-star-fill");
-const storyId = $(e.target).closest("li").attr("id");
-currentUser.addFavorite(storyId)
+/** favorite the story, fill in the star */
+function favoriteStory(e) {
+  $(e.target).removeClass("bi bi-star");
+  $(e.target).addClass("bi bi-star-fill");
+  const storyId = $(e.target).closest("li").attr("id");
+  // api call, favorite the story
+  currentUser.favoritingOrUnfavoriting(storyId, false);
 }
-$allStoriesList.on("click",".bi-star",favoriteStory)
 
-function unFavoriteStory(e){
+$allStoriesList.on("click", ".bi-star", favoriteStory);
+
+/** unfavorite the story, unfill the star */
+function unFavoriteStory(e) {
   $(e.target).removeClass("bi bi-star-fill");
   $(e.target).addClass("bi bi-star");
   const storyId = $(e.target).closest("li").attr("id");
-  currentUser.deleteFavorite(storyId)
-  }
-$allStoriesList.on("click",".bi-star-fill",unFavoriteStory)
+  // api call, unfavorite the story
+  currentUser.favoritingOrUnfavoriting(storyId, true);
+}
+
+$allStoriesList.on("click", ".bi-star-fill", unFavoriteStory);
+
+// shows the pipes, favorites, submit buttons
+function showLoggedInButtons() {
+  // unhide pipes, submit button, nav user favorites button
+  $pipes.show();
+  $navSubmit.show();
+  $navUserFavorites.show();
+}
+
+// unshows the pipes, favorites, submit buttons
+function unshowLoggedInButtons() {
+  // unhide pipes, submit button, nav user favorites button
+  $pipes.hide();
+  $navSubmit.hide();
+  $navUserFavorites.hide();
+}

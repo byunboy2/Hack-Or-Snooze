@@ -33,15 +33,26 @@
     <nav>
       <div class="navbar-brand">
         <a class="nav-link" href="#" id="nav-all">Hack or Snooze</a>
+        <span class="hidden pipe">|</span>
+        <a class="nav-link" href="#"><span id="nav-submit" class="hidden">Submit</span></a>
+        <span class="hidden pipe">|</span>
+        <a class="nav-link" href="#"><span id="nav-user-favorites" class="hidden">Favorites</span></a>
       </div>
       <div class="nav-right">
         <a class="nav-link" href="#" id="nav-login">login/signup</a>
         <a class="nav-link" href="#" id="nav-user-profile"></a>
-        <a class="nav-link" id="nav-user-favorites">Favorites</a>
-        <a class="nav-link" href="#" id="nav-submit">Submit</a>
         <a class="hidden" id="nav-logout" href="#"><small>(logout)</small></a>
       </div>
     </nav>
+
+    <!-- New Story Form -->
+      <form id="newStory-form" class="hidden">
+        <input type="text" id="newStory-form-title" placeholder="title" />
+        <input type="text" id="newStory-form-author" placeholder="author" />
+        <input type="text" id="newStory-form-url" placeholder="url" />
+        <button>Submit</button>
+      </form>
+    </section>
 
     <!-- area for stories (all stories, user stories, favorites) -->
     <section class="stories-container container">
@@ -95,14 +106,7 @@
         <button type="submit">create account</button>
       </form>
 
-      <!-- New Story Form -->
-      <form id="newStory-form" class="hidden">
-        <input type="text" id="newStory-form-title" placeholder="title" />
-        <input type="text" id="newStory-form-author" placeholder="author" />
-        <input type="text" id="newStory-form-url" placeholder="url" />
-        <button>Submit</button>
-      </form>
-    </section>
+      
 
     <!-- Library JS & our JS -->
     <script src="https://unpkg.com/jquery"></script>
