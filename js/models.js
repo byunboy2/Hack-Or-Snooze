@@ -205,23 +205,24 @@ class User {
   }
 
   /** add or remove Favorite */
-  async favoritingOrUnfavoriting(storyId, isUnfavoriting) {
+  async favoritingOrUnfavoriting(story, isUnfavoriting) {
     // make api call to favorite a story
     await axios({
-      url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
       method: isUnfavoriting ? "DELETE" : "POST",
       data: {
-        token: currentUser.loginToken,
+        token: this.loginToken,
       },
     });
 
     // remove the favorite from the current user
     if (isUnfavoriting) {
-      currentUser.favorites = currentUser.favorites.filter(
-        ({ storyId: id }) => id !== storyId
+      this.favorites = this.favorites.filter(
+        storyInstance => storyInstance.storyId !== 
       );
     } else {
-      // add story to the current user favorites
+     // add story to the current user favorites
+      this.favorites.push(story)
     }
   }
 }

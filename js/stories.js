@@ -26,32 +26,17 @@ async function getAndShowStoriesOnStart() {
 
 async function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
-
-  // TODO make favorited story, star show up
-  // const username = localStorage.getItem("username");
-
-  // let favoritesIds;
-
-  // if (username) {
-  //   // make api call, get the current user
-  //   favoritesIds = (await getUserFavorites(username)).map(
-  //     ({ storyId }) => storyId
-  //   );
-  // }
-
-  // // user exists and
-  // const isFavorited = username && favoritesIds.includes(story.storyId);
-
-  // // favorite star type
-  // const favoriteStar = isFavorited
-  //   ? '<i class="bi bi-star-fill"></i>'
-  //   : '<i class="bi bi-star"></i>';
-
+  const favoriteStory = currentUser.favorites.map(storyInstance =>
+    storyInstance.storyId);
+  const hasBeenFavorited = favoriteStory.includes(story.storyId)
   const hostName = story.getHostName();
-
+  const star = hasBeenFavorited===true ? `<i class="bi bi-star-fill"></i>` :
+  `<i class="bi bi-star-fill"></i>`;
+  console.log("star",star)
+  console.log("hasBeenFavorited", hasBeenFavorited)
   return $(`
       <li id="${story.storyId}">
-      <i class="bi bi-star"></i>
+      ${star}
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -118,4 +103,45 @@ async function getUserFavorites(username) {
     },
   });
   return favorites;
+}
+
+
+/** favorite the story, fill in the star */
+function favoriteStory(e) {
+  $(e.target).removeClass("bi bi-star");
+  $(e.target).addClass("bi bi-star-fill");
+  const storyId = $(e.target).closest("li").attr("id");
+  // api call, favorite the story
+  const story = storyList.stories.find(instance => instance.storyId === storyId);
+  currentUser.favoritingOrUnfavoriting(story, false);
+}
+
+$allStoriesList.on("click", ".bi-star", favoriteStory);
+
+/** unfavorite the story, unfill the star */
+function unFavoriteStory(e) {
+  $(e.target).removeClass("bi bi-star-fill");
+  $(e.target).addClass("bi bi-star");
+  const storyId = $(e.target).closest("li").attr("id");
+  // api call, unfavorite the story
+  const story = storyList.stories.find(instance => instance.storyId === storyId);
+  currentUser.favoritingOrUnfavoriting(story, true);
+}
+
+$allStoriesList.on("click", ".bi-star-fill", unFavoriteStory);
+
+// shows the pipes, favorites, submit buttons
+function showLoggedInButtons() {
+  // unhide pipes, submit button, nav user favorites button
+  $pipes.show();
+  $navSubmit.show();
+  $navUserFavorites.show();
+}
+
+// unshows the pipes, favorites, submit buttons
+function unshowLoggedInButtons() {
+  // unhide pipes, submit button, nav user favorites button
+  $pipes.hide();
+  $navSubmit.hide();
+  $navUserFavorites.hide();
 }
