@@ -114,3 +114,19 @@ function updateUIOnUserLogin() {
 
   updateNavOnLogin();
 }
+
+function favoriteStory(e){
+$(e.target).removeClass("bi bi-star");
+$(e.target).addClass("bi bi-star-fill");
+const storyId = $(e.target).closest("li").attr("id");
+currentUser.addFavorite(storyId)
+}
+$allStoriesList.on("click",".bi-star",favoriteStory)
+
+function unFavoriteStory(e){
+  $(e.target).removeClass("bi bi-star-fill");
+  $(e.target).addClass("bi bi-star");
+  const storyId = $(e.target).closest("li").attr("id");
+  currentUser.deleteFavorite(storyId)
+  }
+$allStoriesList.on("click",".bi-star-fill",unFavoriteStory)

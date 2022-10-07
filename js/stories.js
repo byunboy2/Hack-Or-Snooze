@@ -3,6 +3,7 @@
 const $titleInput = $("#newStory-form-title");
 const $authorInput = $("#newStory-form-author");
 const $urlInput = $("#newStory-form-url");
+const $likeStory = $(".favorite-tag");
 
 // This is the global list of the stories, an instance of StoryList
 let storyList;
@@ -28,7 +29,9 @@ function generateStoryMarkup(story) {
 
   const hostName = story.getHostName();
   return $(`
+
       <li id="${story.storyId}">
+      <i class="bi bi-star"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>

@@ -54,3 +54,4 @@ function getFavorites() {
   const favoritesIds = favorites.map(({ storyId }) => storyId);
   // filter the stories in storyList.stories
 }
+

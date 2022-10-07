@@ -205,8 +205,7 @@ class User {
   }
 
   /** addFavorite */
-  async addFavorite(story) {
-    const { storyId } = story;
+  async addFavorite(storyId) {
     // make api call to favorite a story
     await axios({
       url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
@@ -218,8 +217,7 @@ class User {
   }
 
   /** unfavorite */
-  async unfavorite(story) {
-    const { storyId } = story;
+  async unfavorite(storyId) {
     // make api call to un-favorite a story
     await axios({
       url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
@@ -230,3 +228,4 @@ class User {
     });
   }
 }
+
