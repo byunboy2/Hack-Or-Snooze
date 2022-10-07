@@ -204,19 +204,29 @@ class User {
     }
   }
 
-  /** addFavorite: add story to favorites or remove story from favorites
-   * - make api call and update the currentUser's favorites
-   */
-  addFavorite(story) {
-    const storyIdx = this.favorites.indexOf(story);
-    // if storyIdx, remove the story
-    // if no storyIdx, add the story
-    if (storyIdx >= 0) {
-      this.favorites.splice(storyIdx, 1);
-      // remove the story from current user's favorites on backend
-    } else {
-      this.favorites.push(story);
-      // add the story to current user's favorites on backend
-    }
+  /** addFavorite */
+  async addFavorite(story) {
+    const { storyId } = story;
+    // make api call to favorite a story
+    await axios({
+      url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
+      method: "POST",
+      data: {
+        token: currentUser.loginToken,
+      },
+    });
+  }
+
+  /** unfavorite */
+  async unfavorite(story) {
+    const { storyId } = story;
+    // make api call to un-favorite a story
+    await axios({
+      url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
+      method: "DELETE",
+      data: {
+        token: currentUser.loginToken,
+      },
+    });
   }
 }

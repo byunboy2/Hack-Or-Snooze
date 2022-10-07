@@ -43,3 +43,14 @@ $("#nav-submit").on("click", revealStoryForm);
 function revealStoryForm() {
   $("#newStory-form").css("display", "block"); // update .show()
 }
+
+$favoritesBtn.on("click", getFavorites);
+
+/** getFavorites: get the user favorites */
+function getFavorites() {
+  // get current User's favorites
+  const { favorites } = currentUser;
+  // get favorites ids
+  const favoritesIds = favorites.map(({ storyId }) => storyId);
+  // filter the stories in storyList.stories
+}
