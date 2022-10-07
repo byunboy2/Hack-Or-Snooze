@@ -214,5 +214,14 @@ class User {
         token: currentUser.loginToken,
       },
     });
+
+    // remove the favorite from the current user
+    if (isUnfavoriting) {
+      currentUser.favorites = currentUser.favorites.filter(
+        ({ storyId: id }) => id !== storyId
+      );
+    } else {
+      // add story to the current user favorites
+    }
   }
 }

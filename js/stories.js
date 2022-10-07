@@ -28,29 +28,30 @@ async function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
   // TODO make favorited story, star show up
+  // const username = localStorage.getItem("username");
 
-  const username = localStorage.getItem("username");
+  // let favoritesIds;
 
-  let favoritesIds;
+  // if (username) {
+  //   // make api call, get the current user
+  //   favoritesIds = (await getUserFavorites(username)).map(
+  //     ({ storyId }) => storyId
+  //   );
+  // }
 
-  if (username) {
-    // make api call, get the current user
-    favoritesIds = (await getUserFavorites(username)).map(
-      ({ storyId }) => storyId
-    );
-  }
+  // // user exists and
+  // const isFavorited = username && favoritesIds.includes(story.storyId);
 
-  const isFavorited = favoritesIds.includes(story.storyId);
-  // favorite star type
-  const favoriteStar = isFavorited
-    ? '<i class="bi bi-star-fill"></i>'
-    : '<i class="bi bi-star"></i>';
+  // // favorite star type
+  // const favoriteStar = isFavorited
+  //   ? '<i class="bi bi-star-fill"></i>'
+  //   : '<i class="bi bi-star"></i>';
 
   const hostName = story.getHostName();
 
   return $(`
       <li id="${story.storyId}">
-      ${favoriteStar}
+      <i class="bi bi-star"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -105,7 +106,6 @@ async function handleSubmitNewStory(evt) {
 // get the current user's favorites using an id
 async function getUserFavorites(username) {
   const token = localStorage.getItem("token");
-  console.log({ token });
   const {
     data: {
       user: { favorites },
@@ -113,7 +113,9 @@ async function getUserFavorites(username) {
   } = await axios({
     url: `https://hack-or-snooze-v3.herokuapp.com/users/${username}`,
     method: "GET",
-    token,
+    params: {
+      token,
+    },
   });
   return favorites;
 }
